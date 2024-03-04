@@ -12,7 +12,7 @@ interface Message {
 
 function ChatPage() {
   const router = useRouter();
-  const { postId } = router.query;
+  const { bot_id } = router.query;
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -55,14 +55,19 @@ function ChatPage() {
 
     setNewMessage(''); // Clear the input after sending
   };
-
+  useEffect(()=>{
+getConversation(bot_id)
+  },[bot_id])
+  useEffect(() => {
+    scroll.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
   useEffect(() => {
     const storedMessages = localStorage.getItem('chatMessages');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     }
     scroll.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, []);
 
   
   const handleKeyPress = (event: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -81,7 +86,7 @@ function ChatPage() {
             <div className=" py-2 flex  items-center gap-4">
               {/* {userData?.image ? ( */}
 
-              <h1 className="   font-large font-bold text-Black italic">Chat AI {postId}</h1>
+              <h1 className="   font-large font-bold text-Black italic">Chat AI {bot_id}</h1>
             </div>
 
             {/* <p className="text-xs text-gray-500">4 memebres</p> */}
@@ -106,10 +111,19 @@ function ChatPage() {
                   </div>
                 ) : (
 
-                    <div className="flex flex-row p-2 pl-6 w-11/12 chat chat-start " ref={scroll}>
-  
-  <div className="chat-bubble bg-gray-300  p-3  font-serif rounded-tl-xl  rounded-tr-xl rounded-br-xl  relative "><p className='text-sm  text-black flex'>{message.text}</p></div>
-</div>
+                        <div className="flex flex-row p-2 pl-6 w-11/12 chat chat-start" ref={scroll}>
+                  
+                    <div className="chat-bubble bg-gray-300  p-3  font-serif rounded-tl-xl  rounded-tr-xl rounded-br-xl  relative "><p className='text-sm  text-black flex'>{message.text}</p></div>
+                  </div>
+//                                       <div className="flex flex-row p-2 pl-6 w-11/12 chat chat-start " ref={scroll}>
+
+//   <div className='flex space-x-2 justify-center items-cente h-screen dark:invert'>
+//  	{/* <span className='sr-only'>Loading...</span> */}
+//   	<div className='h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+// 	<div className='h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+// 	<div className='h-4 w-4 bg-black rounded-full animate-bounce'></div>
+// </div>
+// </div>
                    
                 //         <div className="flex flex-row p-2 w-11/12" ref={scroll}>
                 //      <div className=" ">

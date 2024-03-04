@@ -1,11 +1,21 @@
 import axios from 'axios';
-import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function getConversation() {
+export default async function getConversation(botId) {
   try {
-    const response = await axios.get(`${process.env.SECRET_API_KEY}/conversation`);
-    return response.data;
+    console.log(botId, 'checkkkk');
+    const response = await axios.post(`https://4a66-49-205-134-245.ngrok-free.app/conversation`, {
+      bot_id: botId,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+
+    console.log(response, 'lkjhgfghj')
+    return response;
   } catch (error) {
-    return 'Internal Server Error';
+    console.error('Error fetching conversation:', error);
+    throw error; // Re-throw the error for the calling code to handle
   }
 }

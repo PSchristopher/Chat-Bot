@@ -14,7 +14,7 @@ const [isLoaded,setIsLoaded]=useState(false)
       if(!isLoaded){return null}
   return (
     <RootLayout>
-      <Component {...pageProps} />
+      <Component className='bg-white' {...pageProps} />
     </RootLayout>
   );
 }

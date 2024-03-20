@@ -1,21 +1,41 @@
 import axios from 'axios';
 
-export default async function getConversation(botId) {
+export async function getConversation(botId: string) {
   try {
-    console.log(botId, 'checkkkk');
-    const response = await axios.post(`https://4a66-49-205-134-245.ngrok-free.app/conversation`, {
-      bot_id: botId,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
+    console.log(botId, 'oiajhdjk')
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation/`,
+      { "bot_id": botId },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
 
-    console.log(response, 'lkjhgfghj')
-    return response;
+    // Destructure the data from the response
+    const { id, bot_id, end_user_id } = response.data.data;
+
+    // Store relevant data in local storage
+    localStorage.setItem('conversation_id', id);
+    localStorage.setItem('bot_id', bot_id);
+    localStorage.setItem('end_user_id', end_user_id);
+
+    return response.data;
   } catch (error) {
-    console.error('Error fetching conversation:', error);
+    
+    throw error; // Re-throw the error for the calling code to handle
+  }
+}
+
+export async function sendMessageToBot(body:any) {
+  try {
+console.log(body, 'hgjh')
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/message/`,
+       body ,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    return response.data;
+  } catch (error) {
+    // return error;
+    console.error('Error sending message to bot:', error);
     throw error; // Re-throw the error for the calling code to handle
   }
 }

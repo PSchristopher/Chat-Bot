@@ -203,8 +203,9 @@ opacity: .65;
 }
 
 .scAI-chat-window-iframe.small {
-  --chat-window-max-height: 550px;
-  --chat-window-max-width: 350px;
+  --chat-window-max-height: 100%;
+  --chat-window-max-height: 100%;
+  --chat-window-max-width: 100%;
 }
 
 .scAI-chat-window-iframe.large {
@@ -240,9 +241,9 @@ opacity: .65;
   }
   
   .scAI-chat-window-iframe.show {
-    width: 30%;
-    height: 40%;
-    max-height: 40%;
+    width: 100%; /* Adjusted to occupy 100% width on smaller screens */
+    height: 100%;
+    max-height: 100%;
   }
 }
 `);
@@ -250,7 +251,7 @@ opacity: .65;
 const imagePath= 'SIRIKA_FINAL_LOGO.png'
   const scAIButtonHTML = `
 <div class="scAI-chat-bubble ">
-<span class="icon" style='background-color:white'>
+<span class="icon" style='background-color:#663333'>
 
    
 
@@ -334,8 +335,9 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
   const previewTextElement = document.createElement('div');
   previewTextElement.classList.add('scAI-chat-window-preview-text', 'd-none');
   wrapperItem.appendChild(previewTextElement);
+ 
 
-  window.addEventListener('message', () => {
+  window.addEventListener('message', (event) => {
     
     const button = document.querySelector('.scAI-chat-bubble');
     const iframe = document.querySelector('.scAI-chat-window-iframe');
@@ -399,6 +401,7 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
       event.payload = {};
       document.dispatchEvent(event);
     }
+    console.log('hgfghjhgfdgh')
   });
 
   let iframe = document.createElement('iframe');
@@ -412,7 +415,6 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
   const embeddedChatbotConfig = window.embeddedChatbotConfig || {};
   const chatbotId = embeddedChatbotConfig.chatbotId;
   const domain = embeddedChatbotConfig.domain;
-
   // Construct the src URL for the iframe
   iframe.src = `${domain}/${chatbotId}`;
   iframe.id = 'chat-iframe'
@@ -422,9 +424,10 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
   body.appendChild(wrapperItem);
 
   function openBotWindow() {
+    console.log('first')
     const i = document.querySelector('.scAI-chat-window-iframe');
     const b = document.querySelector('.scAI-chat-bubble');
-    
+    sessionStorage.setItem('popupShown', true);
     if (b.classList.contains('open')) {
       return;
     } else {
@@ -434,6 +437,8 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
   };
 
   function closeBotWindow() {
+    console.log('first')
+
     const i = document.querySelector('.scAI-chat-window-iframe');
     const b = document.querySelector('.scAI-chat-bubble');
 
@@ -444,14 +449,33 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
       return;
     }
   }
-
+  window.addEventListener('close', function(e) {
+    if (e.detail.action === 'closeChatWindow') {
+       // Perform action here, e.g., close a chat window
+       console.log('Chat window closed');
+    }
+   });
   const toggleButton = document.querySelector('.scAI-chat-bubble');
   toggleButton.addEventListener('click', () => {
     toggleBotButton();
   });
 
   function toggleBotButton() {
-    
+
+   const popup = document.getElementById('popup'); // Retrieve the popup element
+console.log(popup, ';lkjhbhj')
+    if (popup) { // Check if the popup element exists
+        // Hide and remove the popup
+        popup.style.opacity = '0';
+        popup.style.transform = 'scale(0)';
+        setTimeout(() => {
+            popup.remove();
+        }, 500);
+
+        // Remove the 'popupShown' item from sessionStorage
+        sessionStorage.removeItem('popupShown');
+    }
+
     const i = document.querySelector('.scAI-chat-window-iframe');
     const b = document.querySelector('.scAI-chat-bubble');
     const iframe = document.getElementById('chat-iframe');
@@ -470,6 +494,77 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
       // iframe.contentWindow.postMessage(message, `http://localhost:3000/${queryString}`);
     }
   }
+
+  // If the popup has not been shown in this session
+  const popupShown = sessionStorage.getItem('popupShown');
+console.log(popupShown, 'poiujhygtf')
+  // If the popup has not been shown in this session
+  if (!popupShown) {
+    // Create popup element
+    const popup = document.createElement('div');
+    popup.innerHTML = `
+    <div style="position: relative;">
+    <div style="position: absolute; top: -27px; right: -27px; cursor: pointer; background:#f6f6f6;border-radius: 100%; ">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+            <path d="M3.646 3.646a.5.5 0 0 1 .708 0L8 7.293l4.646-4.647a.5.5 0 0 1 .708.708L8.707 8l4.647 4.646a.5.5 0 0 1-.708.708L8 8.707l-4.646 4.647a.5.5 0 1 1-.708-.708L7.293 8 2.646 3.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+    </div>
+    <div>
+        Hi!👋 What can I help you with ?
+    </div>
+</div>
+
+    `;
+    popup.id = 'popup';
+    popup.style.backgroundColor = 'white';
+    popup.style.color = 'black';
+    popup.style.boxShadow = 'rgba(150, 150, 150, 0.2) 0px 10px 30px 0px, rgba(150, 150, 150, 0.2) 0px 0px 0px 1px';
+    popup.style.borderRadius = '10px';
+    popup.style.padding = '20px';
+    popup.style.width = 'full';
+    popup.style.margin = '8px';
+    popup.style.fontSize = '14px';
+    popup.style.opacity = '1';
+    popup.style.transform = 'scale(1)';
+    popup.style.transition = 'opacity 0.5s ease 0s, transform 0.5s ease 0s';
+    popup.style.cursor = 'pointer';
+    popup.style.position = 'fixed';
+    popup.style.bottom = '100px'; // Adjust bottom position as needed
+    popup.style.right = '20px'; // Adjust right position as needed
+
+    // Add event listener to close the popup when clicked
+    popup.addEventListener('click', () => {
+        popup.style.opacity = '0';
+        popup.style.transform = 'scale(0)';
+        // setTimeout(() => {
+        //     popup.remove();
+        // }, 500);
+        toggleBotButton();
+    });
+    const closeButton = popup.querySelector('svg');
+    // Show close button only when hovering over the popup
+    popup.addEventListener('mouseenter', () => {
+       closeButton.style.display = 'block';
+    });
+
+    popup.addEventListener('mouseleave', () => {
+       closeButton.style.display = 'none';
+    });
+   closeButton.addEventListener('click', (event)=>{
+      event.stopPropagation(); // Prevent event propagation
+      popup.style.transform = 'scale(0)';
+      setTimeout(() => {
+          popup.remove();
+      }, 500);
+
+    });
+
+    // Add popup to the document body
+    document.body.appendChild(popup);
+
+    // Mark the popup as shown in sessionStorage
+    sessionStorage.setItem('popupShown', true);
+}
   const initializeUI = () => {
     // toggleButton();
   };

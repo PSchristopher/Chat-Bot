@@ -463,7 +463,6 @@ const imagePath= 'SIRIKA_FINAL_LOGO.png'
   function toggleBotButton() {
 
    const popup = document.getElementById('popup'); // Retrieve the popup element
-console.log(popup, ';lkjhbhj')
     if (popup) { // Check if the popup element exists
         // Hide and remove the popup
         popup.style.opacity = '0';

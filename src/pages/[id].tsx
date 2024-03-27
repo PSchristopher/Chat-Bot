@@ -36,8 +36,14 @@ function ChatPage() {
   const scroll = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+//     const isRunningInIframe = window !== window.parent;
+// console.log(isRunningInIframe, 'isRunningInIframeisRunningInIframe')
+    // // if (inputRef.current && !isRunningInIframe) {
+    //   inputRef.current.focus();
+    // // }
+    inputRef?.current?.focus();
+
+    }, []);
 
   const handleSend = async () => {
     try {
@@ -135,27 +141,27 @@ function ChatPage() {
       setIsRotating(false);
     }, 1000);
   };
-  useEffect(() => {
-    const handleClick = () => {
-      console.log('jnhjm');
-      const element = document.querySelector('.scAI-chat-bubble');
-      console.log(element);
-      if (element) {
-        element.classList.remove('open');
-      }
-    };
+  // useEffect(() => {
+  //   const handleClick = () => {
+  //     console.log('jnhjm');
+  //     const element = document.querySelector('.scAI-chat-bubble');
+  //     console.log(element);
+  //     if (element) {
+  //       element.classList.remove('open');
+  //     }
+  //   };
   
-    // Ensure handleClick is called after DOM is ready
-    if (document.readyState === 'complete') {
-      handleClick();
-    } else {
-      window.addEventListener('load', handleClick);
-    }
+  //   // Ensure handleClick is called after DOM is ready
+  //   if (document.readyState === 'complete') {
+  //     handleClick();
+  //   } else {
+  //     window.addEventListener('load', handleClick);
+  //   }
   
-    return () => {
-      window.removeEventListener('load', handleClick);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('load', handleClick);
+  //   };
+  // }, []);
   return (
     <>
       <div className="flex flex-col h-screen bg-white">
@@ -230,10 +236,12 @@ function ChatPage() {
               onChange={handleInputChange} // Changed the type of event handler
               placeholder="Type your message..."
               onKeyDown={handleKeyDown}
+              autoFocus
               maxLength={300}
               style={{ overflowY: 'scroll', scrollbarWidth: 'none',
               padding:'18px 24px 18px 12px',
-              height:'58px'
+              height:'58px',
+              
              }}
             />
           </div>

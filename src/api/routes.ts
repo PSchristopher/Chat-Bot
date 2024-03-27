@@ -28,7 +28,7 @@ export async function sendMessageToBot(body:any) {
   try {
 console.log(body, 'hgjh')
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/message/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/message/history`,
        body ,
       { headers: { 'Content-Type': 'application/json' } }
     );
